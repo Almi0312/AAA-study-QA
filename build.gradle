@@ -1,19 +1,90 @@
 plugins {
     id 'java'
+    id "io.franzbecker.gradle-lombok" version "5.0.0"
+    id "io.qameta.allure" version "2.11.2"
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
+
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
+dependencies {
+    //JUnit
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.1'
+    testImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
+
+    //Testng
+    testImplementation 'org.testng:testng:7.8.0'
+
+
+    //Owner
+    testImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.12'
+
+    //Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    //Библиотека для записи и чтения файлов
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
+}
+
+//Создание отдельной конфигурации или задачи для testNG
+tasks.register("testNGRun", Test.class) {
+//запуск через консоль ./gradlew clean testNGRun -x test -Dsuite="testng.xml"
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    String suiteName = System.getProperty("suite")
+    if(suiteName != null){
+        useTestNG {
+            suites suiteName
+        }
+    } else {
+        useTestNG()
+    }
+}
+
+//Использование JUnit по дефолту
 test {
     useJUnitPlatform()
+//    добавляет логирование к плагину test
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+/**
+ * Код для запуска отдельных тестов через консоль
+ */
+tasks.register("myTags", Test.class){
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    //Благодаря этому можно запускать тесты так
+    //Пример запуска теста
+    // ./gradlew clean myTags -x test -DcustomTags="UNIT SMOKE"
+    String fullTags = System.getProperty("customTags")
+    if (fullTags != null) {
+        String[] tags = System.getProperty("customTags").split(" ")
+        //Тестовый запускатор, который происходит в реальном времени
+        useJUnitPlatform {
+            for (String tag : tags) {
+                includeTags.add(tag);
+            }
+        }
+    }
 }
