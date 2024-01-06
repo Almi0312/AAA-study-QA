@@ -1,6 +1,8 @@
 plugins {
     id 'java'
+    //lombok
     id "io.franzbecker.gradle-lombok" version "5.0.0"
+    //allure
     id "io.qameta.allure" version "2.11.2"
 }
 
@@ -23,22 +25,33 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.1'
+
+    //jackson для конвертации и работы с JSON файлами
     testImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
 
     //Testng
     testImplementation 'org.testng:testng:7.8.0'
 
+    //REST ASSURED для Api запросов
+    testImplementation 'io.rest-assured:rest-assured:5.3.0'
+    implementation 'io.qameta.allure:allure-rest-assured:2.20.1'
+
+    //Faker нужна для рандомных значений
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    //SoftAssert или AssertJ нужна для просмотра всех тестов, даже если они упали с ошибкой
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 
     //Owner
     testImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.12'
 
-    //Lombok
+    //Lombok для сокращения рутинного кода
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    //Библиотека для записи и чтения файлов
+    //Apache Библиотека для записи и чтения файлов
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
 }
 
