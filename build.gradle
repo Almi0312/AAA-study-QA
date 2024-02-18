@@ -28,6 +28,8 @@ dependencies {
     //Testng
     testImplementation 'org.testng:testng:7.8.0'
 
+    //Selenium
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.14.1'
 
     //Owner
     testImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.12'
@@ -40,6 +42,13 @@ dependencies {
 
     //Библиотека для записи и чтения файлов
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
+
+    //WebDriverManager ля автоскачивания драйвера для тестов UI
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
+
+    //Selenide
+    testImplementation 'com.codeborne:selenide:7.0.4'
+
 }
 
 //Создание отдельной конфигурации или задачи для testNG
